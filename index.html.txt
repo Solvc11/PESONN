@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Peso Neonatal</title>
+
+<style>
+body { font-family: Arial; margin:20px; max-width:500px; }
+h2 { text-align:center; }
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.resultado {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.rojo {
+    color: red;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🍼 Cálculo Peso Neonatal</h2>
+
+<label>Peso nacimiento (g)</label>
+<input id="pn" type="number">
+
+<label>Peso 1er día / horas</label>
+<input id="d1" type="number">
+
+<label>Peso 2° día</label>
+<input id="d2" type="number">
+
+<label>Peso 3° día</label>
+<input id="d3" type="number">
+
+<button onclick="calcular()">Calcular</button>
+
+<div id="resultado" class="resultado"></div>
+
+<script>
+
+function calcular() {
+
+    let pn = parseFloat(document.getElementById("pn").value);
+    let d1 = parseFloat(document.getElementById("d1").value);
+    let d2 = parseFloat(document.getElementById("d2").value);
+    let d3 = parseFloat(document.getElementById("d3").value);
+
+    if (!pn) {
+        alert("Ingrese peso de nacimiento");
+        return;
+    }
+
+    function calc(peso) {
+        let perdida_g = pn - peso;
+        let perdida_pct = (perdida_g / pn * 100);
+        return {
+            g: perdida_g,
+            p: perdida_pct
+        };
+    }
+
+    let r1 = d1 ? calc(d1) : null;
+    let r2 = d2 ? calc(d2) : null;
+    let r3 = d3 ? calc(d3) : null;
+
+    let html = "";
+
+    if (r1) {
+        html += `<p class="${r1.p > 5.6 ? 'rojo':''}">
+        Día 1: ↓ ${r1.g.toFixed(0)} g (${r1.p.toFixed(1)}%)
+        </p>`;
+    }
+
+    if (r2) {
+        html += `<p class="${r2.p > 10 ? 'rojo':''}">
+        Día 2: ↓ ${r2.g.toFixed(0)} g (${r2.p.toFixed(1)}%)
+        </p>`;
+    }
+
+    if (r3) {
+        html += `<p class="${r3.p > 10 ? 'rojo':''}">
+        Día 3: ↓ ${r3.g.toFixed(0)} g (${r3.p.toFixed(1)}%)
+        </p>`;
+    }
+
+    document.getElementById("resultado").innerHTML = html;
+}
+
+</script>
+
+</body>
+</html>
